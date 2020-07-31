@@ -53,28 +53,13 @@ function Event({ event }) {
   )
 }
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
   const event = await getEventByIndex(params.id)
 
   return {
     props: {
       event,
     },
-  }
-}
-
-export async function getStaticPaths() {
-  const events = await queryEvents()
-
-  return {
-    paths: events.map((event, index) => {
-      return {
-        params: {
-          id: index.toString(),
-        },
-      }
-    }),
-    fallback: false,
   }
 }
 
