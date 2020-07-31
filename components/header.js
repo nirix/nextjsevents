@@ -2,11 +2,13 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Navbar } from 'react-bootstrap'
 
-export default function Header() {
+export default function Header({ title }) {
+  const pageTitle = title ? title : 'Events'
+  
   return (
     <>
       <Head>
-        <title>Events</title>
+        <title>{pageTitle}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
