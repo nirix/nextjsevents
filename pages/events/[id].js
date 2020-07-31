@@ -16,7 +16,7 @@ function Event({ event }) {
     })
   } else {
     seats.push(
-      <div className="pl-3 text-muted">No seats available</div>
+      <div className="pl-3 text-muted" key="1">No seats available</div>
     )
   }
 
