@@ -1,12 +1,5 @@
 const events = require('../../../data/events')
-
-function locationRexExpBuilder(location) {
-  let parts = Object.values(location).map((part) => {
-    return `(${part})?`
-  })
-
-  return new RegExp(parts.join('( |, )?'))
-}
+import moment from 'moment'
 
 export default (req, res) => {
   res.statusCode = 200
@@ -23,6 +16,29 @@ export default (req, res) => {
     filteredEvents = filteredEvents.filter((event) => {
       // Match lowercase as the user may enter a string in any case.
       return event.Title.toLowerCase().includes(req.query.q.toLowerCase())
+    })
+  }
+
+  // Date filter, exact
+  if (req.query.startDate && !req.query.endDate) {
+    filteredEvents = filteredEvents.filter((event) => {
+      const eventDateTime = moment(event.Time)
+      const eventDate = moment(`${eventDateTime.year()}-${eventDateTime.month()+1}-${eventDateTime.date()}`)
+      const queryDate = moment(req.query.startDate)
+
+      return queryDate.isSame(eventDate)
+    })
+  }
+
+  // Date filter, between
+  if (req.query.startDate && req.query.endDate) {
+    filteredEvents = filteredEvents.filter((event) => {
+      const eventDateTime = moment(event.Time)
+      const eventDate = moment(`${eventDateTime.year()}-${eventDateTime.month()+1}-${eventDateTime.date()}`)
+      const queryStartDate = moment(req.query.startDate)
+      const queryEndDate = moment(req.query.endDate)
+
+      return eventDate.isSameOrAfter(queryStartDate) && eventDate.isSameOrBefore(queryEndDate)
     })
   }
 
